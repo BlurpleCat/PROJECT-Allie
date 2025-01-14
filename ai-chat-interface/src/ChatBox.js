@@ -6,17 +6,35 @@ const ChatBox = ({ messages, isTyping, isDarkMode }) => {
       {messages.map((message, index) => (
         <div
           key={index}
-          style={styles.messageContainer}
+          style={{
+            ...styles.messageContainer,
+            justifyContent: message.sender === "user" ? "flex-end" : "flex-start", // Align messages by sender
+          }}
         >
           <div
             style={{
               ...styles.message,
-              backgroundColor: message.sender === "user" ? (isDarkMode ? "#444" : "#e0e0e0") : (isDarkMode ? "#333" : "#f1f1f1"),
+              backgroundColor: message.sender === "user"
+                ? isDarkMode
+                  ? "#444"
+                  : "#e0e0e0"
+                : isDarkMode
+                ? "#333"
+                : "#f1f1f1",
               color: isDarkMode ? "#fff" : "#000", // Ensure text is readable
             }}
           >
             <div>{message.text}</div>
-            <span style={styles.timestamp}>{new Date(message.timestamp).toLocaleTimeString()}</span>
+            <span
+              style={{
+                ...styles.timestamp,
+                textAlign: message.sender === "user" ? "right" : "left", // Align timestamp
+                right: message.sender === "user" ? "10px" : "auto", // Position for user messages
+                left: message.sender === "user" ? "auto" : "10px", // Position for AI messages
+              }}
+            >
+              {new Date(message.timestamp).toLocaleTimeString()}
+            </span>
           </div>
         </div>
       ))}
@@ -31,29 +49,28 @@ const styles = {
     padding: "20px",
     overflowY: "scroll",
     display: "flex",
-    flexDirection: "column", // Stack messages vertically
-    alignItems: "flex-end", // Align all messages to the right side of the container
+    flexDirection: "column",
   },
   messageContainer: {
     display: "flex",
     width: "100%",
-    justifyContent: "flex-end", // Ensure each message container is aligned to the right
-    margin: "10px 0", // Added margin to give space between messages
+    margin: "10px 0",
   },
   message: {
     borderRadius: "10px",
     padding: "10px",
-    maxWidth: "75%", // Limit message width to 75% of container
+    maxWidth: "75%",
     wordWrap: "break-word",
-    flexShrink: 0, // Prevent shrinking
+    flexShrink: 0,
     position: "relative",
+    textAlign: "left",
   },
   timestamp: {
     fontSize: "0.8rem",
     color: "#888",
     position: "absolute",
-    bottom: "-15px", // Move timestamp further below the message bubble
-    right: "10px",
+    bottom: "-16px",
+    whiteSpace: "nowrap", // Prevent wrapping
   },
   typingIndicator: {
     fontSize: "1rem",
