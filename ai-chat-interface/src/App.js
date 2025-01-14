@@ -59,7 +59,7 @@ const App = () => {
   return (
     <div style={{ ...styles.container, ...(isDarkMode ? styles.dark : styles.light) }}>
       <header style={styles.header}>
-        <h1 style={{ ...styles.title, color: isDarkMode ? "#fff" : "#000" }}>AI Alley</h1> {/* Title color adjusts based on dark mode */}
+        <h1 style={{ ...styles.title, color: isDarkMode ? "#fff" : "#000" }}>PROJECT Allie</h1> {/* Title color adjusts based on dark mode */}
         <button onClick={() => setShowSettings(!showSettings)} style={styles.settingsButton}>
           ⚙️
         </button>
