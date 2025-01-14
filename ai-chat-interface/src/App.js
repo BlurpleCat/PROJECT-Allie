@@ -21,29 +21,22 @@ const App = () => {
 
   const handleSendMessage = async (userMessage) => {
     if (!userMessage.trim() || !aiReady) return;
-
+  
     setAiReady(false);
-
+  
     const newMessage = { sender: "user", text: userMessage, timestamp: new Date() };
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-
+  
     setIsTyping(true);
-    try {
-      const response = await fetch("/api/get-ai-response", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage, model: selectedModel }),
-      });
-      const data = await response.json();
-      const aiMessage = { sender: "ai", text: data.response, timestamp: new Date() };
+  
+    // Simulate an AI response
+    setTimeout(() => {
+      const aiMessage = { sender: "ai", text: "Hello World!", timestamp: new Date() };
       setMessages((prevMessages) => [...prevMessages, aiMessage]);
-    } catch (error) {
-      console.error("Error fetching AI response:", error);
-    } finally {
       setIsTyping(false);
       setAiReady(true);
-    }
-  };
+    }, 1000);
+  };  
 
   const handleThemeChange = (theme) => {
     setIsDarkMode(theme);
