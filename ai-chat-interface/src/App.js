@@ -4,39 +4,48 @@ import InputBox from "./InputBox";
 import SettingsPage from "./SettingsPage";
 
 const App = () => {
+  // Initialize dark mode state from localStorage
+  const storedDarkMode = localStorage.getItem("isDarkMode") === "true";
+  const [isDarkMode, setIsDarkMode] = useState(storedDarkMode);
+
   const [messages, setMessages] = useState(() => {
     const savedMessages = localStorage.getItem("chatMessages");
     return savedMessages ? JSON.parse(savedMessages) : [];
   });
 
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [aiReady, setAiReady] = useState(true);
   const [selectedModel, setSelectedModel] = useState("Example 1");
   const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
+    // Save messages to localStorage
     localStorage.setItem("chatMessages", JSON.stringify(messages));
   }, [messages]);
 
+  useEffect(() => {
+    // Store dark mode preference in localStorage
+    localStorage.setItem("isDarkMode", isDarkMode);
+  }, [isDarkMode]);
+
   const handleSendMessage = async (userMessage) => {
     if (!userMessage.trim() || !aiReady) return;
-  
+
     setAiReady(false);
-  
+
     const newMessage = { sender: "user", text: userMessage, timestamp: new Date() };
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-  
+
     setIsTyping(true);
-  
-    // Simulate an AI response
+
+    // Simulating the AI response
     setTimeout(() => {
       const aiMessage = { sender: "ai", text: "Hello World!", timestamp: new Date() };
       setMessages((prevMessages) => [...prevMessages, aiMessage]);
       setIsTyping(false);
       setAiReady(true);
-    }, 1000);
-  };  
+    }, 500); // Simulate 1-second delay for the AI response
+  };
 
   const handleThemeChange = (theme) => {
     setIsDarkMode(theme);
@@ -52,7 +61,6 @@ const App = () => {
   return (
     <div style={{ ...styles.container, ...(isDarkMode ? styles.dark : styles.light) }}>
       <header style={styles.header}>
-        <h1 style={{ ...styles.title, color: isDarkMode ? "#fff" : "#000" }}>PROJECT Allie</h1> {/* Title color adjusts based on dark mode */}
         <button onClick={() => setShowSettings(!showSettings)} style={styles.settingsButton}>
           ⚙️
         </button>
@@ -103,12 +111,9 @@ const styles = {
   },
   header: {
     display: "flex",
-    justifyContent: "space-between", // Space between title and settings button
-    alignItems: "center",
+    justifyContent: "flex-end",
     padding: "10px 20px",
-  },
-  title: {
-    fontSize: "1.5rem",
+    borderBottom: "1px solid #ccc",
   },
   settingsButton: {
     fontSize: "1.5rem",
