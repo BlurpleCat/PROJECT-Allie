@@ -44,7 +44,7 @@ const App = () => {
       setMessages((prevMessages) => [...prevMessages, aiMessage]);
       setIsTyping(false);
       setAiReady(true);
-    }, 500); // Simulate 1-second delay for the AI response
+    }, 500); // Simulate 0.5-second delay for the AI response
   };
 
   const handleThemeChange = (theme) => {
@@ -113,7 +113,6 @@ const styles = {
     display: "flex",
     justifyContent: "flex-end",
     padding: "10px 20px",
-    borderBottom: "1px solid #ccc",
   },
   settingsButton: {
     fontSize: "1.5rem",
@@ -126,7 +125,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     padding: "15px",
-    backgroundColor: "#fff", // Set to white in light mode
+    backgroundColor: "#fff",
   },
   dropdown: {
     padding: "10px",
