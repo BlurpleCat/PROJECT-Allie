@@ -8,29 +8,29 @@ const ChatBox = ({ messages, isTyping, isDarkMode }) => {
           key={index}
           style={{
             ...styles.messageContainer,
-            justifyContent: message.sender === "user" ? "flex-end" : "flex-start", // Align messages by sender
+            justifyContent: message.role === "user" ? "flex-end" : "flex-start", // Align messages by sender
           }}
         >
           <div
             style={{
               ...styles.message,
-              backgroundColor: message.sender === "user"
+              backgroundColor: message.role === "user"
                 ? isDarkMode
                   ? "#444"
                   : "#e0e0e0"
                 : isDarkMode
-                ? "#333"
-                : "#f1f1f1",
+                  ? "#333"
+                  : "#f1f1f1",
               color: isDarkMode ? "#fff" : "#000", // Ensure text is readable
             }}
           >
-            <div>{message.text}</div>
+            <div>{message.content}</div>
             <span
               style={{
                 ...styles.timestamp,
-                textAlign: message.sender === "user" ? "right" : "left", // Align timestamp
-                right: message.sender === "user" ? "10px" : "auto", // Position for user messages
-                left: message.sender === "user" ? "auto" : "10px", // Position for AI messages
+                textAlign: message.role === "user" ? "right" : "left", // Align timestamp
+                right: message.role === "user" ? "10px" : "auto", // Position for user messages
+                left: message.role === "user" ? "auto" : "10px", // Position for AI messages
               }}
             >
               {new Date(message.timestamp).toLocaleTimeString()}

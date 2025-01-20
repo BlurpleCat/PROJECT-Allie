@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import ChatBox from "./ChatBox";
 import InputBox from "./InputBox";
 import SettingsPage from "./SettingsPage";
+import { Bedrock } from "./Agents.mjs";
 
 const App = () => {
   // Initialize dark mode state from localStorage
   const storedDarkMode = localStorage.getItem("isDarkMode") === "true";
   const [isDarkMode, setIsDarkMode] = useState(storedDarkMode);
 
-  const [messages, setMessages] = useState(() => {
+  let [messages, setMessages] = useState(() => {
     const savedMessages = localStorage.getItem("chatMessages");
     return savedMessages ? JSON.parse(savedMessages) : [];
   });
@@ -20,6 +21,7 @@ const App = () => {
 
   useEffect(() => {
     // Save messages to localStorage
+    console.log(messages);
     localStorage.setItem("chatMessages", JSON.stringify(messages));
   }, [messages]);
 
@@ -33,22 +35,26 @@ const App = () => {
 
     setAiReady(false);
 
-    const newMessage = { sender: "user", text: userMessage, timestamp: new Date() };
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-
+    const newMessage = { role: "user", content: userMessage, timestamp: new Date() };
+    messages = [...messages, newMessage];
+    setMessages((prevMessages) => {
+      return messages;
+    });
     setIsTyping(true);
 
     // Simulating the AI response
-    setTimeout(() => {
-      const aiMessage = { 
-        sender: "ai", 
-        text: "Hello World!", 
-        timestamp: new Date() 
-      };
-      setMessages((prevMessages) => [...prevMessages, aiMessage]);
-      setIsTyping(false);
-      setAiReady(true);
-    }, 500); // Simulate 0.5-second delay for the AI response
+    console.log('messageHistory', messages);
+    const response = await Bedrock.getResponse({
+      messages,
+    })
+    const aiMessage = {
+      ...response.responseMessage,
+      timestamp: new Date()
+    }
+    messages = [...messages, aiMessage]
+    setMessages((prevMessages) => messages);
+    setIsTyping(false);
+    setAiReady(true);
   };
 
   const handleThemeChange = (theme) => {
@@ -87,8 +93,7 @@ const App = () => {
                 color: isDarkMode ? "#000" : "#000", // White text for light mode, black for dark mode
               }}
             >
-              <option>Example 1</option>
-              <option>Example 2</option>
+              <option>Claude</option>
             </select>
             <InputBox onSendMessage={handleSendMessage} disabled={!aiReady} isDarkMode={isDarkMode} />
           </div>
