@@ -40,7 +40,11 @@ const App = () => {
 
     // Simulating the AI response
     setTimeout(() => {
-      const aiMessage = { sender: "ai", text: "Hello World!", timestamp: new Date() };
+      const aiMessage = { 
+        sender: "ai", 
+        text: "Hello World!", 
+        timestamp: new Date() 
+      };
       setMessages((prevMessages) => [...prevMessages, aiMessage]);
       setIsTyping(false);
       setAiReady(true);
