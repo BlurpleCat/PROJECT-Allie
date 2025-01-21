@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ChatBox from "./ChatBox";
 import InputBox from "./InputBox";
 import SettingsPage from "./SettingsPage";
-import { Bedrock } from "./Agents.mjs";
+import * as models from "./Agents.mjs";
 
 const App = () => {
   // Initialize dark mode state from localStorage
@@ -16,9 +16,12 @@ const App = () => {
 
   const [isTyping, setIsTyping] = useState(false);
   const [aiReady, setAiReady] = useState(true);
-  const [selectedModel, setSelectedModel] = useState("Example 1");
+  const [selectedModel, setSelectedModel] = useState(() => {
+    const savedModel = localStorage.getItem("selectedModel");
+    return savedModel ? savedModel : "Claude";
+  });
   const [showSettings, setShowSettings] = useState(false);
-
+  console.log('selectedModel', selectedModel);
   useEffect(() => {
     // Save messages to localStorage
     console.log(messages);
@@ -29,6 +32,11 @@ const App = () => {
     // Store dark mode preference in localStorage
     localStorage.setItem("isDarkMode", isDarkMode);
   }, [isDarkMode]);
+
+  useEffect(() => {
+    // Store active model in localStorage
+    localStorage.setItem("selectedModel", selectedModel);
+  }, [selectedModel]);
 
   const handleSendMessage = async (userMessage) => {
     if (!userMessage.trim() || !aiReady) return;
@@ -44,7 +52,7 @@ const App = () => {
 
     // Simulating the AI response
     console.log('messageHistory', messages);
-    const response = await Bedrock.getResponse({
+    const response = await models[selectedModel].getResponse({
       messages,
     })
     const aiMessage = {
@@ -90,10 +98,17 @@ const App = () => {
               onChange={(e) => setSelectedModel(e.target.value)}
               style={{
                 ...styles.dropdown,
-                color: isDarkMode ? "#000" : "#000", // White text for light mode, black for dark mode
+                color: isDarkMode ? "#000" : "#000",
               }}
             >
+              <option>ChatGPT</option>
               <option>Claude</option>
+              <option>Mistral</option>
+              <option>Commandr</option>
+              <option>Llama</option>
+              <option>Jamba</option>
+              <option>Nova</option>
+              <option>Titan</option>
             </select>
             <InputBox onSendMessage={handleSendMessage} disabled={!aiReady} isDarkMode={isDarkMode} />
           </div>
